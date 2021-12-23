@@ -4,29 +4,22 @@
     <input v-model="newTodo" type="text" @keypress.enter="createTodo">
     <button @click="createTodo">확인</button>
     <div v-for="(todo, idx) in todoList" :key="idx">
-      <!-- 수정중이 아닐 때 -->
-      <div v-if="true">
-        <span @click="updateLine(todo.id)" :class="{ line:todo.line }">{{todo.text}}</span>
-        <button @click="updateTodo(todo.id)">✏️</button>
-        <button @click="deleteTodo(todo.id)">❌</button>
-      </div>
-      <!--  수정중 일 때   -->
-<!--      <div v-else>-->
-<!--        <input type="text" v-model="todo.text" @keypress.enter="updateTodo(todo.id)">-->
-<!--        <button @click="updateTodo(todo.id)">완료</button>-->
-<!--      </div>-->
+      <todo-item :todo="todo" :idx="idx" :todoList="todoList"></todo-item>
     </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
-
-// let url = 'https://jihyeon.pythonanywhere.com/api/todo/'
-let url = 'http://127.0.0.1:8000/api/todo/'
+import TodoItem from "@/components/TodoItem";
+let url = 'https://jihyeon.pythonanywhere.com/api/todo/'
+// let url = 'http://127.0.0.1:8000/api/todo/'
 
 export default {
   name: "TodoLIst",
+  components: {
+    TodoItem,
+  },
   data() {
     return {
       todoList: [],
@@ -53,42 +46,19 @@ export default {
     },
     createTodo() {
       const todo = {
-        // 나의 투두
         text: this.newTodo,
-        // 투두의 id
-        // 투두를 완료했으면 true가 되고 줄이 그어진다.
         line: false,
-        // update하고 있는 투두인지.
       }
       this.postTodo(todo)
       this.newTodo = ''
+      this.todoList.push(todo)
+      this.getTodoList()
     },
-    async deleteTodo(id) {
-      await axios.delete(url+`${id}`)
-      .then((res)=>{
-        console.log(res)
-      })
-      .catch((err)=>{
-        console.log(err)
-      })
-    },
-    updateTodo(id){
-      const updateItem = this.todoList.filter((todo) => todo.id === parseInt(id))
-      // update 중이 아니면 update, update 중이면 update 완료
-      updateItem[0].update =!updateItem[0].update
-      this.saveTodoList()
-    },
-    updateLine(id){
-      const lineItem = this.todoList.filter((todo) => todo.id === parseInt(id))
-      // 줄 그어져있으면 없애고 줄 없으면 그어짐
-      lineItem[0].line = !lineItem[0].line
-      this.saveTodoList()
-    }
   }
 }
 </script>
 
-<style scoped>
+<style>
 .line{
   text-decoration: line-through;
 }
