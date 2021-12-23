@@ -50,7 +50,7 @@ export default {
         console.log(err)
       })
     },
-    async createTodo() {
+    createTodo() {
       const todo = {
         // 나의 투두
         text: this.newTodo,
@@ -62,10 +62,14 @@ export default {
       this.postTodo(todo)
       this.newTodo = ''
     },
-    deleteTodo(id) {
-      // delete할 투두 삭제
-      this.todoList = this.todoList.filter((todo) => todo.id !== parseInt(id))
-      this.saveTodoList()
+    async deleteTodo(id) {
+      await axios.delete(url+`${id}`)
+      .then((res)=>{
+        console.log(res)
+      })
+      .catch((err)=>{
+        console.log(err)
+      })
     },
     updateTodo(id){
       const updateItem = this.todoList.filter((todo) => todo.id === parseInt(id))
