@@ -28,33 +28,39 @@ export default {
     idx: Number,
   },
   methods: {
+    // 완료하면 줄 긋기, 줄 그어져있으면 줄 지우기
     async updateLine(todo) {
       const data = {
         text: todo.text,
         line: !(todo.line),
       }
+      // 완료했는지 데이터 저장
       await axios.put(url + `${todo.id}`, data)
           .then((res) => {
             console.log(res)
+            todo.line = !(todo.line)
           })
           .catch((err) => {
             console.log(err)
           })
-      todo.line = !(todo.line)
     },
+    // 투두 DELETE
     async deleteTodo(id) {
       await axios.delete(url+`${id}`)
           .then((res)=>{
             console.log(res)
+            // 지우면 그부분 자르기
             this.todoList.splice(this.idx,1)
           })
           .catch((err)=>{
             console.log(err)
           })
     },
+    // update 하게 되면 false -> true
     updateTodo(){
       this.update = !this.update
     },
+    // update 완료시 true -> false로 바꾸고 데이터 수정
     async updateComplete(todo){
       this.update = !this.update
       const data = {

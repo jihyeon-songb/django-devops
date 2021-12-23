@@ -12,8 +12,8 @@
 <script>
 import axios from 'axios'
 import TodoItem from "@/components/TodoItem";
+// 배포 서버 url
 let url = 'https://jihyeon.pythonanywhere.com/api/todo/'
-// let url = 'http://127.0.0.1:8000/api/todo/'
 
 export default {
   name: "TodoLIst",
@@ -27,18 +27,24 @@ export default {
     }
   },
   created() {
-    // 로컬스토리지에 저장된 투두 리스트가 있다면 불러온다
+    // 투두 리스트 데이터 가져오기
     this.getTodoList()
   },
   methods: {
+    // 투두 리스트 데이터 가져오기
     async getTodoList() {
       const response = await axios.get(url)
       this.todoList = response.data
     },
-    postTodo(todo) {
-      axios.post(url,todo)
+    // 투두 CREATE
+    async postTodo(todo) {
+      await axios.post(url,todo)
       .then((res) => {
         console.log(res)
+        // 일단 푸시하고
+        this.todoList.push(todo)
+        // 다시 투두리스트 가져오기
+        this.getTodoList()
       })
       .catch((err) => {
         console.log(err)
@@ -51,8 +57,6 @@ export default {
       }
       this.postTodo(todo)
       this.newTodo = ''
-      this.todoList.push(todo)
-      this.getTodoList()
     },
   }
 }
