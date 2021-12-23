@@ -22,7 +22,8 @@
 <script>
 import axios from 'axios'
 
-let url = 'https://jihyeon.pythonanywhere.com/api/todo/'
+// let url = 'https://jihyeon.pythonanywhere.com/api/todo/'
+let url = 'http://127.0.0.1:8000/api/todo/'
 
 export default {
   name: "TodoLIst",
