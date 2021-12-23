@@ -41,9 +41,14 @@ export default {
       const response = await axios.get(url)
       this.todoList = response.data
     },
-    async postTodo(todo) {
-      const response = await axios.post(url,todo)
-      console.log(response)
+    postTodo(todo) {
+      axios.post(url,todo)
+      .then((res) => {
+        console.log(res)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
     },
     async createTodo() {
       const todo = {
